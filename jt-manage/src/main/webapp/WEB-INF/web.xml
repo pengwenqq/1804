@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="jt-manage" version="2.5">
+	<display-name>jt-manage</display-name>
+
+	<!--配置前端控制器 springMvc -->
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--初始化参数 ,加载容器，tomcat容器与springMVC,spring容器通过这个context通讯 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/spring/applicationContext*.xml</param-value>
+		</init-param>
+		<!-- 容器启动时，立刻加载servlet,如果不写，则是懒加载，需要第一次访问servlet时才加载，响应时间长 -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!--请求路径有两种 1.全路径 /service/*.do 请求必须以/service开头 以.do结尾 2.后缀型路径 *.do 请求必须以.do结尾 
+		3.前缀型路径：/service/* 拦截以service开头的请求 / 拦截任意请求（拦截包含静态资源 放行.jsp等动态资源请求）（配合mvc配置中的<mvc:default-servlet-handler/>放行静态资源 
+		最后效果就是只拦截访问类似/service/的请求 为了实现restFul风格 -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<!--配置POST请求过滤器,解决乱码 -->
+	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
